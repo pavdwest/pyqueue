@@ -15,20 +15,20 @@ class Task:
 class TaskType2(Task):
     pass
 
+
 class TaskType3(Task):
     pass
 
 
 class WorkerPool:
-    num_workers: int
-    workers: list()
-
     def __init__(self, num_workers: int) -> None:
         self.num_workers = num_workers
+        self.workers = list()
 
     def start(self):
-        for i in range(4):
+        for i in range(self.num_workers):
             worker = threading.Thread(target=self.task_runner, args=(task_queue, i,), daemon=True)
+            self.workers.append(worker)
             worker.start()
 
     def task_runner(self, q, thread_no):
@@ -43,8 +43,8 @@ class WorkerPool:
 task_queue = queue.Queue()
 
 # Create worker pool
-wp = WorkerPool(num_workers=4)
-wp.start()
+worker_pool = WorkerPool(num_workers=4)
+worker_pool.start()
 
 # Create tasks
 for j in range(5):
